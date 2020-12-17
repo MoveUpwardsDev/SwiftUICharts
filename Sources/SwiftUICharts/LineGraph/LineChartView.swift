@@ -10,8 +10,6 @@ import SwiftUI
 
 /// SwiftUI view that draws data points by drawing a line.
 public struct LineChartView<Content: View>: View {
-    let dataPoints: [DataPoint]
-    let lineMinHeight: CGFloat
     let showAxis: Bool
     let showLabels: Bool
     let labelCount: Int?
@@ -34,8 +32,6 @@ public struct LineChartView<Content: View>: View {
      - labelCount: The count of labels that should be shown below the chart. Default is dataPoints.count unless you specify a value.
      */
     public init(
-        dataPoints: [DataPoint],
-        lineMinHeight: CGFloat = 100,
         showAxis: Bool = true,
         showLabels: Bool = true,
         labelCount: Int? = nil,
@@ -46,8 +42,6 @@ public struct LineChartView<Content: View>: View {
         @ViewBuilder axisView: @escaping () -> Content,
         @ViewBuilder labelsView: @escaping () -> Content
     ) {
-        self.dataPoints = dataPoints
-        self.lineMinHeight = lineMinHeight
         self.showAxis = showAxis
         self.showLabels = showLabels
         self.labelCount = labelCount
@@ -89,8 +83,7 @@ public struct LineChartView<Content: View>: View {
 #if DEBUG
 struct LineChartView_Previews: PreviewProvider {
     static var previews: some View {
-        LineChartView(dataPoints: DataPoint.mock,
-                      grid: { EmptyView() },
+        LineChartView(grid: { EmptyView() },
                       legend: { EmptyView() },
                       lineShape: { EmptyView() },
                       pinShape: { EmptyView() },

@@ -8,27 +8,27 @@
 import SwiftUI
 
 public struct LabelsView: View {
-    let dataPoints: [DataPoint]
+    let labels: [String]
     let labelColor: Color
     let labelCount: Int
 
     private var threshold: Int {
-        let threshold = Double(dataPoints.count) / Double(labelCount)
+        let threshold = Double(labels.count) / Double(labelCount)
         return Int(threshold.rounded(.awayFromZero))
     }
 
-    public init(dataPoints: [DataPoint], axisColor: Color, labelCount: Int? = nil) {
-        self.dataPoints = dataPoints
+    public init(labels: [String], axisColor: Color, labelCount: Int? = nil) {
+        self.labels = labels
         self.labelColor = axisColor
-        self.labelCount = labelCount ?? dataPoints.count
+        self.labelCount = labelCount ?? labels.count
     }
 
     public var body: some View {
         GeometryReader { geometry in
             HStack(spacing: 0) {
-                ForEach(dataPoints.indexed(), id: \.1.self) { index, bar in
+                ForEach(labels.indexed(), id: \.1.self) { index, label in
                     if index % self.threshold == 0 {
-                        Text(bar.label)
+                        Text(label)
                             .multilineTextAlignment(.center)
                             .foregroundColor(labelColor)
                             .font(.caption)
@@ -43,7 +43,7 @@ public struct LabelsView: View {
 #if DEBUG
 struct LabelsView_Previews: PreviewProvider {
     static var previews: some View {
-        LabelsView(dataPoints: DataPoint.mock, axisColor: .secondary)
+        LabelsView(labels: DataPoint.mock.map { "\($0.label)" }, axisColor: .secondary)
     }
 }
 #endif

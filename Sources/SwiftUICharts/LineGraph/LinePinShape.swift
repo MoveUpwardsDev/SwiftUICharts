@@ -7,19 +7,19 @@
 import SwiftUI
 
 public struct LinePinShape: Shape {
-    let dataPoints: [DataPoint]
+    let dataPoints: [Double]
     let pinSize: CGSize
 
-    public init(dataPoints: [DataPoint], pinSize: CGSize = .init(width: 8, height: 8)) {
+    public init(dataPoints: [Double], pinSize: CGSize = .init(width: 8, height: 8)) {
         self.dataPoints = dataPoints
         self.pinSize = pinSize
     }
 
     public func path(in rect: CGRect) -> Path {
-        guard !dataPoints.isEmpty, let max = dataPoints.max()?.value, max > 0 else { return Path() }
+        guard !dataPoints.isEmpty, let max = dataPoints.max(), max > 0 else { return Path() }
 
         return Path { path in
-            let startY = CGFloat(dataPoints.first?.value ?? 0) / CGFloat(dataPoints.max()?.value ?? 1)
+            let startY = CGFloat(dataPoints.first ?? 0) / CGFloat(dataPoints.max() ?? 1)
             let stepX = rect.width / CGFloat(dataPoints.count)
             path.move(to: CGPoint(x: stepX * 0.5 - pinSize.width * 0.5, y: rect.height - rect.height * startY))
             var currentX: CGFloat = stepX * 0.5 - pinSize.width * 0.5
@@ -34,7 +34,7 @@ public struct LinePinShape: Shape {
 
             dataPoints.dropFirst().forEach {
                 currentX += stepX
-                let y = CGFloat($0.value / (dataPoints.max()?.value ?? 1)) * rect.height
+                let y = CGFloat($0 / (dataPoints.max() ?? 1)) * rect.height
                 let rect = CGRect(x: currentX,
                                   y: rect.height - y - pinSize.width / 2,
                                   width: pinSize.width,
@@ -48,7 +48,7 @@ public struct LinePinShape: Shape {
 #if DEBUG
 struct LinePinShape_Previews: PreviewProvider {
     static var previews: some View {
-        LinePinShape(dataPoints: DataPoint.mock)
+        LinePinShape(dataPoints: DataPoint.mock.map { $0.value })
     }
 }
 #endif
